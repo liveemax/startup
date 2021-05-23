@@ -1,9 +1,19 @@
-import Navbar from "./components/Navbar"
+import React, { useEffect } from 'react';
+import Navbar from './components/Navbar';
+import AppRoutes from './routers/AppRoutes';
+import { useState } from 'react';
+
+export const Trigger = React.createContext({});
 
 function App() {
-  return (
+  const [localTrigger, setLocalTrigger] = useState(true);
+    let [localPath, setLocalPath] = useState('/');
+    return (
     <div>
-        <Navbar/>
+      <Trigger.Provider value={{ localTrigger, setLocalTrigger,localPath,setLocalPath }}>
+        <Navbar />
+        <AppRoutes />
+      </Trigger.Provider>
     </div>
   );
 }
