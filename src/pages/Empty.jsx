@@ -24,16 +24,16 @@ function Empty() {
   const [localUser, setLocalUser] = useState('');
   const { localTrigger,localPath,setLocalPath} = useContext(Trigger);
   const getUser=sessionStorage.getItem('user')
+  const setEmptyUser=()=>{sessionStorage.setItem('user', `{}`)}
   useEffect(() => {
     if(getUser&&JSON.parse(getUser).login)
     {
-      sessionStorage.setItem('user', `{}`);
+      setEmptyUser()
       setLocalPath('/')
+      return
     }
-  }, []);
-  useEffect(() => {
     if (!getUser) {
-      sessionStorage.setItem('user', `{}`);
+      setEmptyUser()
       return;
     }
     if (JSON.parse(getUser).message === notFound) {
@@ -42,6 +42,7 @@ function Empty() {
     }
     setLocalUser(JSON.parse(getUser));
   }, [localTrigger]);
+  console.log(localPath)
   return (
     <Container>
       <EmptyRouter

@@ -1,18 +1,33 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,Suspense } from 'react';
 import Navbar from './components/Navbar';
 import AppRoutes from './routers/AppRoutes';
 import { useState } from 'react';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import styled from 'styled-components';
 
 export const Trigger = React.createContext({});
+
+const Spinner = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: tomato;
+  font-size: 50px;
+  text-align: center;
+`;
 
 function App() {
   const [localTrigger, setLocalTrigger] = useState(true);
     let [localPath, setLocalPath] = useState('/');
+    let [localSpinner, setLocalSpinner] = useState(false);
+    console.log(localSpinner)
     return (
     <div>
-      <Trigger.Provider value={{ localTrigger, setLocalTrigger,localPath,setLocalPath }}>
+      <Trigger.Provider value={{setLocalSpinner, localTrigger, setLocalTrigger,localPath,setLocalPath }}>
         <Navbar />
-        <AppRoutes />
+        {localSpinner?<Spinner><FontAwesomeIcon icon={faSpinner } spin={true}/></Spinner>:<AppRoutes />}
       </Trigger.Provider>
     </div>
   );
