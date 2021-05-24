@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faSearch } from '@fortawesome/free-solid-svg-icons';
 
-function EmptyRouter(props) {
+const EmptyRouter=React.memo=(props)=> {
   const { localUser, notFound,setLocalPath} = props;
   const [localIcon, setLocalIcon] = useState(
     <FontAwesomeIcon icon={faSearch} />

@@ -19,13 +19,15 @@ const Spinner = styled.div`
 `;
 
 function App() {
-  const [localTrigger, setLocalTrigger] = useState(true);
     let [localPath, setLocalPath] = useState('/');
     let [localSpinner, setLocalSpinner] = useState(false);
+    useEffect(()=>{
+        window.addEventListener("unload",()=>{sessionStorage.removeItem("user")})
+    },[])
     console.log(localSpinner)
     return (
     <div>
-      <Trigger.Provider value={{setLocalSpinner, localTrigger, setLocalTrigger,localPath,setLocalPath }}>
+      <Trigger.Provider value={{setLocalSpinner,localPath,setLocalPath }}>
         <Navbar />
         {localSpinner?<Spinner><FontAwesomeIcon icon={faSpinner } spin={true}/></Spinner>:<AppRoutes />}
       </Trigger.Provider>

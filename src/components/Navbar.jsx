@@ -53,7 +53,7 @@ const Form = styled.form`
 
 const Navbar = () => {
   let [searchInput, setSearchInput] = useState('');
-  const {setLocalSpinner, localTrigger, setLocalTrigger,localPath,setLocalPath} = useContext(Trigger);
+  const {setLocalSpinner,localPath,setLocalPath} = useContext(Trigger);
   return (
     <Header>
       <Github>
@@ -63,6 +63,7 @@ const Navbar = () => {
         <label>
           <FontAwesomeIcon icon={faSearch} />
           <input
+              autoComplete="off"
             onChange={(e) => {
               setSearchInput(e.currentTarget.value);
             }}
@@ -72,14 +73,12 @@ const Navbar = () => {
             onKeyDown={(e) => {
               if (e.code === 'Enter') {
                   setLocalSpinner(true)
-                userApi.get(`${searchInput}`).then(async (result) => {
-                     result =await result.json();
+                userApi.get(`${searchInput}`).then((result) => {
                     sessionStorage.setItem('user', JSON.stringify(result));
                     setLocalSpinner(false)
                     setLocalPath('/user');
                   if (result.message === 'Not Found')
                       setLocalPath('/');
-                  setLocalTrigger(!localTrigger);
                 });
                 e.preventDefault();
                 setSearchInput('');

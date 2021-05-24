@@ -22,16 +22,10 @@ const Container = styled.div`
 function Empty() {
   const notFound = 'Not Found';
   const [localUser, setLocalUser] = useState('');
-  const { localTrigger,localPath,setLocalPath} = useContext(Trigger);
+  const {localPath,setLocalPath} = useContext(Trigger);
   const getUser=sessionStorage.getItem('user')
   const setEmptyUser=()=>{sessionStorage.setItem('user', `{}`)}
   useEffect(() => {
-    if(getUser&&JSON.parse(getUser).login)
-    {
-      setEmptyUser()
-      setLocalPath('/')
-      return
-    }
     if (!getUser) {
       setEmptyUser()
       return;
@@ -41,7 +35,7 @@ function Empty() {
       return
     }
     setLocalUser(JSON.parse(getUser));
-  }, [localTrigger]);
+  }, []);
   console.log(localPath)
   return (
     <Container>
