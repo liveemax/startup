@@ -5,9 +5,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 
 const Second = styled.aside`
-  width: 100%;
-  max-width: 310px;
+  width: 20%;
   padding: 0 5px;
+  min-width: 250px;
   img{
     border-radius: 100%;
     width: 100%;

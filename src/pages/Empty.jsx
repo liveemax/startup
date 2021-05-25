@@ -11,7 +11,7 @@ const Container = styled.div`
   transform: translate(-50%, -50%);
   color: ${(props) => props.theme.icons};
   font-size: 1.5rem;
-  max-width: 210px;
+  max-width: 243px;
   text-align: center;
   svg {
     font-size: 90px;
@@ -24,7 +24,10 @@ function Empty() {
   const [localUser, setLocalUser] = useState('');
   const {localPath,setLocalPath} = useContext(Trigger);
   const getUser=sessionStorage.getItem('user')
-  const setEmptyUser=()=>{sessionStorage.setItem('user', `{}`)}
+  const setEmptyUser=()=>{
+    sessionStorage.setItem('user', `{}`)
+    sessionStorage.setItem('repos', `[]`)
+  }
   useEffect(() => {
     if (!getUser) {
       setEmptyUser()

@@ -8,6 +8,10 @@ import styled from 'styled-components';
 
 export const Trigger = React.createContext({});
 
+const Container = styled.div`
+    height: 100vh;
+`;
+
 const Spinner = styled.div`
   position: absolute;
   top: 50%;
@@ -22,16 +26,18 @@ function App() {
     let [localPath, setLocalPath] = useState('/');
     let [localSpinner, setLocalSpinner] = useState(false);
     useEffect(()=>{
-        window.addEventListener("unload",()=>{sessionStorage.removeItem("user")})
+        window.addEventListener("unload",()=>{
+            sessionStorage.removeItem("user")
+            sessionStorage.removeItem('repos')
+        })
     },[])
-    console.log(localSpinner)
     return (
-    <div>
+    <Container>
       <Trigger.Provider value={{setLocalSpinner,localPath,setLocalPath }}>
         <Navbar />
         {localSpinner?<Spinner><FontAwesomeIcon icon={faSpinner } spin={true}/></Spinner>:<AppRoutes />}
       </Trigger.Provider>
-    </div>
+    </Container>
   );
 }
 

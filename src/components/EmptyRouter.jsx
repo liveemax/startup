@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faSearch } from '@fortawesome/free-solid-svg-icons';
+import styled from 'styled-components';
+import cross from '../assets/img/cross.svg';
 
-const EmptyRouter=React.memo=(props)=> {
+const Text=styled.div`
+  img{
+    margin-bottom: 20px;
+  }`;
+
+const EmptyRouter=(props)=> {
   const { localUser, notFound,setLocalPath} = props;
+  const repos=JSON.parse(sessionStorage.getItem("repos"))
   const [localIcon, setLocalIcon] = useState(
     <FontAwesomeIcon icon={faSearch} />
   );
@@ -11,6 +19,16 @@ const EmptyRouter=React.memo=(props)=> {
     'Start with searching a GitHub user'
   );
   useEffect(() => {
+    if (window.location.pathname===`/user`&&repos.length===0) {
+      setLocalIcon(<img src={cross}/>);
+      setLocalText('Repository list is empty');
+      return
+    }
+    if(window.location.pathname===`/user`)
+    {
+      setLocalIcon("")
+      setLocalText("")
+    }
     if (localUser) {
       if (localUser.login) {
         setLocalPath('/user')
@@ -23,10 +41,10 @@ const EmptyRouter=React.memo=(props)=> {
     }
   }, [localUser]);
   return (
-    <>
+    <Text>
       <div>{localIcon}</div>
       <div>{localText}</div>
-    </>
+    </Text>
   );
 }
 

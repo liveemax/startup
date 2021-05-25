@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import * as userApi from '../api/userApi';
 import { Trigger } from '../App';
 import { Redirect } from 'react-router';
@@ -73,17 +73,22 @@ const Navbar = () => {
             onKeyDown={(e) => {
               if (e.code === 'Enter') {
                   setLocalSpinner(true)
-                userApi.get(`${searchInput}`).then((result) => {
-                    sessionStorage.setItem('user', JSON.stringify(result));
-                    setLocalSpinner(false)
-                    setLocalPath('/user');
-                  if (result.message === 'Not Found')
-                      setLocalPath('/');
-                });
-                e.preventDefault();
-                setSearchInput('');
+                  const user=userApi.getUser(`${searchInput}`)
+                  const repos=userApi.getRepos(`${searchInput}`)
+                  Promise.all([user,repos]).then((result)=>{
+                      sessionStorage.setItem('user', JSON.stringify(result[0]));
+                      sessionStorage.setItem('repos', JSON.stringify(result[1]));
+                      setLocalSpinner(false)
+                      setLocalPath('/user');
+                      if (result[0].message === 'Not Found')
+                          setLocalPath('/');
+
+                  })
+                  e.preventDefault();
+                  setSearchInput('');
+                }
               }
-            }}
+            }
           />
         </label>
       </Form>
