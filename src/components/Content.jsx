@@ -5,8 +5,9 @@ import Repositories from './Repositories';
 
 
 const ContentContainer = styled.div`
-  width: calc(80% - 100px);
+  width: calc(80% - 180px);
   position: relative;
+  margin-left: 80px;
 `;
 
 function Content() {
