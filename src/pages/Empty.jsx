@@ -1,54 +1,20 @@
-import React, { useContext, useEffect, useState } from 'react';
-import styled from 'styled-components';
+import React, { useContext } from 'react';
 import { Trigger } from '../App';
 import EmptyRouter from '../components/EmptyRouter';
-import {Redirect} from 'react-router';
-
-const Container = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: ${(props) => props.theme.icons};
-  font-size: 1.5rem;
-  max-width: 243px;
-  text-align: center;
-  svg {
-    font-size: 90px;
-    margin-bottom: 20px;
-  }
-`;
+import { EmptyContainer } from '../styles/styles';
 
 function Empty() {
-  const notFound = 'Not Found';
-  const [localUser, setLocalUser] = useState('');
-  const {localPath,setLocalPath} = useContext(Trigger);
-  const getUser=sessionStorage.getItem('user')
-  const setEmptyUser=()=>{
-    sessionStorage.setItem('user', `{}`)
-    sessionStorage.setItem('repos', `[]`)
-  }
-  useEffect(() => {
-    if (!getUser) {
-      setEmptyUser()
-      return;
-    }
-    if (JSON.parse(getUser).message === notFound) {
-      setLocalUser(notFound);
-      return
-    }
-    setLocalUser(JSON.parse(getUser));
-  }, []);
-  console.log(localPath)
-  return (
-    <Container>
-      <EmptyRouter
-        localUser={localUser}
-        notFound={notFound}
-        setLocalPath={setLocalPath}
-      />
-      <Redirect to={{pathname: `${localPath}`}}/>
-    </Container>
+    const {state,dispatch}=useContext(Trigger)
+    return (
+    <EmptyContainer>
+      <EmptyRouter localRepos={state.localRepos}
+                   localUser={state.localUser}
+                   localPath={state.localPath}
+                   notFound={state.notFound}
+                   localIcon={state.localIcon}
+                   localText={state.localText}
+                   dispatch={dispatch}/>
+    </EmptyContainer>
   );
 }
 

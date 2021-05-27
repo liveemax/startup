@@ -1,100 +1,52 @@
-import styled from 'styled-components';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { useContext, useState } from 'react';
-import * as userApi from '../api/userApi';
-import { Trigger } from '../App';
 import { Redirect } from 'react-router';
+import * as userApi from '../api/userApi';
+import { NavbarForm, NavbarGithub, NavbarHeader } from '../styles/styles';
 
-const Header = styled.header`
-  background-color: ${(props) => props.theme.primary};
-  font-size: 0.9rem;
-  min-height: 72px;
-  display: flex;
-  align-items: center;
-  padding-left: 40px;
-`;
-
-const Github = styled.div`
-  color: #fff;
-  font-size: 40px;
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const Form = styled.form`
-  position: relative;
-  width: 100%;
-  height: 40px;
-  margin-left: 1.5rem;
-  svg {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    color: ${(props) => props.theme.icons};
-    font-size: 16px;
-    transform: translate(0, -50%);
-  }
-  input {
-    max-width: 500px;
-    width: 100%;
-    height: 20px;
-    padding: 8px 14px 8px 30px;
-    border-radius: 6px;
-    border: none;
-    outline: none;
-  }
-  @media (max-width: 768px) {
-    max-width: 50%;
-  }
-`;
-
-const Navbar = () => {
-  let [searchInput, setSearchInput] = useState('');
-  const {setLocalSpinner,localPath,setLocalPath} = useContext(Trigger);
+const Navbar =React.memo((props) => {
+  const {dispatch,notFound,localPath,searchInput}=props
   return (
-    <Header>
-      <Github>
+    <NavbarHeader>
+      <NavbarGithub>
         <FontAwesomeIcon icon={faGithub} />
-      </Github>
-      <Form>
+      </NavbarGithub>
+      <NavbarForm>
         <label>
           <FontAwesomeIcon icon={faSearch} />
           <input
-              autoComplete="off"
+            autoComplete="off"
             onChange={(e) => {
-              setSearchInput(e.currentTarget.value);
+              dispatch({type:'setSearchInput',searchInput:e.currentTarget.value})
             }}
             id="search"
             type="text"
             value={searchInput}
             onKeyDown={(e) => {
-              if (e.code === 'Enter') {
-                  setLocalSpinner(true)
-                  const user=userApi.getUser(`${searchInput}`)
-                  const repos=userApi.getRepos(`${searchInput}`)
-                  Promise.all([user,repos]).then((result)=>{
-                      sessionStorage.setItem('user', JSON.stringify(result[0]));
-                      sessionStorage.setItem('repos', JSON.stringify(result[1]));
-                      setLocalSpinner(false)
-                      setLocalPath('/user');
-                      if (result[0].message === 'Not Found')
-                          setLocalPath('/');
-
-                  })
-                  e.preventDefault();
-                  setSearchInput('');
-                }
+              if (e.key === 'Enter') {
+                dispatch({type:'setLocalSpinner',localSpinner:true})
+                const user = userApi.getUser(`${searchInput}`);
+                const repos = userApi.getRepos(`${searchInput}`);
+                Promise.all([user, repos]).then((result) => {
+                  dispatch({type:'setLocalRepos',localRepos:result[1]})
+                  dispatch({type:'setLocalUser',localUser:result[0]})
+                  dispatch({type:'setLocalSpinner',localSpinner:false})
+                  dispatch({type:'setLocalPath',localPath:`${process.env.REACT_APP_USER_ROUTE}`})
+                  if (result[0].message === notFound)
+                    dispatch({type:'setLocalPath',localPath:`${process.env.REACT_APP_HOME_ROUTE}`})
+                });
+                e.preventDefault();
+                dispatch({type:'setSearchInput',searchInput:''})
               }
-            }
+            }}
           />
         </label>
-      </Form>
-      <Redirect to={{pathname: `${localPath}`}}/>
-    </Header>
+      </NavbarForm>
+      <Redirect to={{ pathname: `${localPath}` }} />
+    </NavbarHeader>
   );
-};
+})
 
 export default Navbar;
